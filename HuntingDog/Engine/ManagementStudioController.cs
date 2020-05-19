@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
@@ -196,22 +197,38 @@ namespace DatabaseObjectSearcher
 
 		private static UIConnectionInfo CreateFrom(SqlConnectionInfo connInfo)
         {
-            System.Diagnostics.Debugger.Launch();
-            System.Diagnostics.Debugger.Break();
+            //System.Diagnostics.Debugger.Launch();
+            //System.Diagnostics.Debugger.Break();
 
-			var ci = new UIConnectionInfo();
-			ci.ServerName = connInfo.ServerName;
-			ci.ServerType = new Guid("8c91a03d-f9b4-46c0-a305-b5dcc79ff907");
-			ci.UserName = connInfo.UserName;
-			ci.Password = connInfo.Password;
-			ci.PersistPassword = true;
-			ci.ApplicationName = "Microsoft SQL Server Management Studio - Query";
+            var authMethod = SqlConnectionInfo.AuthenticationMethod.NotSpecified;
 
-            ci.AuthenticationType = (int) (connInfo.UseIntegratedSecurity
-                ? SqlConnectionInfo.AuthenticationMethod.NotSpecified
-                : connInfo.Authentication);
+            if (!connInfo.UseIntegratedSecurity)
+            {
+                if (connInfo.Authentication != SqlConnectionInfo.AuthenticationMethod.NotSpecified)
+                    authMethod = connInfo.Authentication;
+                else if(!string.IsNullOrEmpty(connInfo.UserName) && !string.IsNullOrEmpty(connInfo.Password))
+                {
+					// Note: For some reason, auth type is set as not specified for SqlPassword.
+                    authMethod = SqlConnectionInfo.AuthenticationMethod.SqlPassword;
+                }
+            }
 
-			return ci;
+            var ci = new UIConnectionInfo
+            {
+                ServerName = connInfo.ServerName,
+                ServerType = new Guid("8c91a03d-f9b4-46c0-a305-b5dcc79ff907"),
+                UserName = connInfo.UserName,
+                Password = connInfo.Password,
+                PersistPassword = true,
+                ApplicationName = "Microsoft SQL Server Management Studio - Query",
+                AuthenticationType = (int)authMethod,
+				ServerVersion = connInfo.ServerVersion,
+				OtherParams = connInfo.AdditionalParameters,
+				RenewableToken = connInfo.AccessToken,
+				InMemoryPassword = connInfo.SecurePassword,
+            };
+
+            return ci;
 		}
 
 		public static void ListDependency(SqlConnectionInfo connInfo, StoredProcedure sp, Database db)
