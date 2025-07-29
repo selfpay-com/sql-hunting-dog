@@ -195,6 +195,32 @@ namespace DatabaseObjectSearcher
 			}
 		}
 
+		private static string BuildConnectionParameters(SqlConnectionInfo connInfo)
+		{
+			var parameters = new List<string>();
+			
+			// Include the original additional parameters
+			if (!string.IsNullOrEmpty(connInfo.AdditionalParameters))
+			{
+				parameters.Add(connInfo.AdditionalParameters);
+			}
+			
+			// Add encryption settings
+			if (connInfo.EncryptConnection)
+			{
+				parameters.Add("Encrypt=True");
+			}
+			
+			// Add trust server certificate setting
+			if (connInfo.TrustServerCertificate)
+			{
+				parameters.Add("TrustServerCertificate=True");
+			}
+			
+			// Join all parameters with semicolon
+			return string.Join(";", parameters.Where(p => !string.IsNullOrEmpty(p)));
+		}
+		
 		private static UIConnectionInfo CreateFrom(SqlConnectionInfo connInfo)
         {
             //System.Diagnostics.Debugger.Launch();
@@ -223,7 +249,7 @@ namespace DatabaseObjectSearcher
                 ApplicationName = "Microsoft SQL Server Management Studio - Query",
                 AuthenticationType = (int)authMethod,
 				ServerVersion = connInfo.ServerVersion,
-				OtherParams = connInfo.AdditionalParameters,
+				OtherParams = BuildConnectionParameters(connInfo),
 				RenewableToken = connInfo.AccessToken,
 				InMemoryPassword = connInfo.SecurePassword,
             };
