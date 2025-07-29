@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="HuntingDog2019.Company.ed1b9330-4bff-4fb5-85a1-7cee4b0f3f3b" Version="1.0" Language="en-US" Publisher="Company" />
+    <DisplayName>HuntingDog for SSMS 21</DisplayName>
+    <Description xml:space="preserve">Search database objects in SQL Server Management Studio 21</Description>
+    <MoreInfo>https://github.com/pstraszak/sql-hunting-dog</MoreInfo>
+    <License>LICENSE.txt</License>
+    <Icon>Resources\HuntingDog2019.ico</Icon>
+    <PreviewImage>Resources\HuntingDog2019.ico</PreviewImage>
+    <Tags>SQL, SSMS, Database, Search</Tags>
+  </Metadata>
+  <Installation AllUsers="true">
+    <InstallationTarget Id="Microsoft.VisualStudio.Ssms" Version="[21.0,)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.8,)" />
+  </Dependencies>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[16.0,)" DisplayName="Visual Studio core editor" />
+  </Prerequisites>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+  </Assets>
+</PackageManifest>

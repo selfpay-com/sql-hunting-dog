@@ -10,12 +10,15 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
+using Task = System.Threading.Tasks.Task;
 
 namespace HuntingDog
 {
@@ -37,13 +40,13 @@ namespace HuntingDog
     /// </para>
     /// </remarks>
     ///
-    [ProvideAutoLoad(VSConstants.UICONTEXT.ShellInitialized_string)]
-    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [ProvideAutoLoad(VSConstants.UICONTEXT.ShellInitialized_string, PackageAutoLoadFlags.BackgroundLoad)]
+    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [Guid(PackageGuids.HuntingDogPackageIDString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    public sealed class HuntingDogPackage : Package
+    public sealed class HuntingDogPackage : AsyncPackage
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="HuntingDogPackage"/> class.
@@ -65,11 +68,15 @@ namespace HuntingDog
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
         /// </summary>
-        protected override void Initialize()
+        protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<Microsoft.VisualStudio.Shell.ServiceProgressData> progress)
         {
-            base.Initialize();
+            // When initialized asynchronously, the current thread may be a background thread at this point.
+            // Do any initialization that requires the UI thread after switching to the UI thread.
+            await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             
-        HuntingDogCommand.Initialize(this);
+            await base.InitializeAsync(cancellationToken, progress);
+            
+            HuntingDogCommand.Initialize(this);
 
             // total hack https://ssmsschemafolders.codeplex.com/SourceControl/latest#README.md
             DelayAddSkipLoadingReg();
@@ -77,7 +84,13 @@ namespace HuntingDog
 
         public object GetServiceHelper(Type type)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             return GetService(type);
+        }
+        
+        public async Task<object> GetServiceHelperAsync(Type type)
+        {
+            return await GetServiceAsync(type);
         }
 
         #endregion
@@ -93,7 +106,7 @@ namespace HuntingDog
 
         private void DelayAddSkipLoadingReg()
         {
-            var delay = new Timer();
+            var delay = new System.Windows.Forms.Timer();
             delay.Tick += delegate (object o, EventArgs e)
             {
                 delay.Stop();

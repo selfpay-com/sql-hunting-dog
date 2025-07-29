@@ -488,7 +488,7 @@ namespace DatabaseObjectSearcher
 					func.Parameters.Refresh(true);
 
 
-					string execTemplate = func.FunctionType == UserDefinedFunctionType.Scalar ? "SELECT " : "SELECT * FROM ";
+					string execTemplate = func.FunctionType == Microsoft.SqlServer.Management.Smo.UserDefinedFunctionType.Scalar ? "SELECT " : "SELECT * FROM ";
 
 					execScript = string.Format("{0}\r\n {1} [{2}].[{3}]",
 								 UseDataBaseGo(func.Parent), execTemplate, func.Schema, func.Name);

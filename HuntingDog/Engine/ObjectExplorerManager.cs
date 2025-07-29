@@ -531,7 +531,7 @@ namespace DatabaseObjectSearcher
 			else if (objectToSelect is UserDefinedFunction)
 			{
 				var func = (UserDefinedFunction)objectToSelect;
-				string functionNodeName = func.FunctionType == UserDefinedFunctionType.Scalar ? "Scalar-valued Functions" : "Table-valued Functions";
+				string functionNodeName = func.FunctionType == Microsoft.SqlServer.Management.Smo.UserDefinedFunctionType.Scalar ? "Scalar-valued Functions" : "Table-valued Functions";
 				return FindRecursively(nodeDatabases, func.Parent, "Programmability", "Functions", functionNodeName, GetNodeNameFor(objectToSelect));
 			}
 
