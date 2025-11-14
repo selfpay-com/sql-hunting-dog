@@ -259,82 +259,70 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Community.VisualStudio.Toolkit.17" Version="17.0.533" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.0" />
-    <PackageReference Include="Microsoft.VisualStudio.CoreUtility" Version="17.14.249" />
-    <PackageReference Include="Microsoft.VisualStudio.Imaging" Version="17.14.40264" />
-    <PackageReference Include="Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime" Version="17.14.40254" />
-    <PackageReference Include="Microsoft.VisualStudio.OLE.Interop" Version="17.14.40260" />
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.14.40265" />
-    <PackageReference Include="Microsoft.VisualStudio.SDK.Analyzers" Version="17.7.79" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="17.14.40264" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Framework" Version="17.14.40264" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop" Version="17.14.40260" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.10.0" Version="17.14.40260" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.11.0" Version="17.14.40260" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.12.0" Version="17.14.40260" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.8.0" Version="17.14.40260" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.9.0" Version="17.14.40260" />
-    <PackageReference Include="Microsoft.VisualStudio.TextManager.Interop" Version="17.14.40260" />
-    <PackageReference Include="Microsoft.VisualStudio.TextManager.Interop.8.0" Version="17.14.40260" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.14.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Utilities" Version="17.14.40264" />
-    <PackageReference Include="Microsoft.VisualStudio.Validation" Version="17.8.8" />
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.14.2094">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.3" />
+    <!-- Note: These are the needed nuget packages but they have not yet been relased for vs 2026 -->
+    <!-- <PackageReference Include="Microsoft.VisualStudio.CoreUtility" Version="17.14.275" /> -->
+    <!-- <PackageReference Include="Microsoft.VisualStudio.Imaging" Version="17.14.40264" /> -->
+    <!-- <PackageReference Include="Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime" Version="17.14.40254" /> -->
+    <!-- <PackageReference Include="Microsoft.VisualStudio.OLE.Interop" Version="17.14.40260" /> -->
+    <!-- <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.14.40265" /> -->
+    <!-- <PackageReference Include="Microsoft.VisualStudio.SDK.Analyzers" Version="17.7.79" /> -->
+    <!-- <PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="17.14.40264" /> -->
+    <!-- <PackageReference Include="Microsoft.VisualStudio.Shell.Framework" Version="17.14.40264" /> -->
+    <!-- <PackageReference Include="Microsoft.VisualStudio.Shell.Interop" Version="17.14.40260" /> -->
+    <!-- <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.10.0" Version="17.14.40260" /> -->
+    <!-- <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.11.0" Version="17.14.40260" /> -->
+    <!-- <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.12.0" Version="17.14.40260" /> -->
+    <!-- <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.8.0" Version="17.14.40260" /> -->
+    <!-- <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.9.0" Version="17.14.40260" /> -->
+    <!-- <PackageReference Include="Microsoft.VisualStudio.TextManager.Interop" Version="17.14.40260" /> -->
+    <!-- <PackageReference Include="Microsoft.VisualStudio.TextManager.Interop.8.0" Version="17.14.40260" /> -->
+    <!-- <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.14.0" /> -->
+    <!-- <PackageReference Include="Microsoft.VisualStudio.Utilities" Version="17.14.40264" /> -->
+    <!-- <PackageReference Include="Microsoft.VisualStudio.Validation" Version="17.13.22" /> -->
+    <!-- <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.14.2120"> -->
+    <!-- <PrivateAssets>all</PrivateAssets> -->
+    <!-- <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets> -->
+    <!-- </PackageReference> -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="ConnectionDlg">
-      <HintPath>..\Dependencies\SSMS21\ConnectionDlg.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Microsoft.SqlServer.ConnectionInfo">
+      <HintPath>..\Dependencies\SSMS22\Microsoft.SqlServer.ConnectionInfo.dll</HintPath>
     </Reference>
-    <Reference Include="ConnectionDlg.AadInteractiveAuthProvider">
-      <HintPath>..\Dependencies\SSMS21\ConnectionDlg.AadInteractiveAuthProvider.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Microsoft.SqlServer.Management.Sdk.Sfc">
+      <HintPath>..\Dependencies\SSMS22\Microsoft.SqlServer.Management.Sdk.Sfc.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.SqlServer.ConnectionInfo, Version=14.100.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.SqlServer.RegSvrEnum">
+      <HintPath>..\Dependencies\SSMS22\Microsoft.SqlServer.RegSvrEnum.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Smo">
+      <HintPath>..\Dependencies\SSMS22\Microsoft.SqlServer.Smo.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.SqlEnum">
+      <HintPath>..\Dependencies\SSMS22\Microsoft.SqlServer.SqlEnum.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic.Compatibility" />
+    <Reference Include="Microsoft.VisualStudio.Interop, Version=18.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dependencies\SSMS21\Microsoft.SqlServer.ConnectionInfo.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\Dependencies\SSMS22\Microsoft.VisualStudio.Interop.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.SqlServer.ConnectionInfoExtended, Version=14.100.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.VisualStudio.Shell.15.0, Version=18.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dependencies\SSMS21\Microsoft.SqlServer.ConnectionInfoExtended.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\Dependencies\SSMS22\Microsoft.VisualStudio.Shell.15.0.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.SqlServer.Management.Sdk.Sfc, Version=14.100.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.VisualStudio.Shell.Framework, Version=18.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dependencies\SSMS21\Microsoft.SqlServer.Management.Sdk.Sfc.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\Dependencies\SSMS22\Microsoft.VisualStudio.Shell.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.SqlServer.RegSvrEnum, Version=14.100.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dependencies\SSMS21\Microsoft.SqlServer.RegSvrEnum.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Microsoft.VisualStudio.Threading">
+      <HintPath>..\Dependencies\SSMS22\Microsoft.VisualStudio.Threading.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.SqlServer.Smo, Version=14.100.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dependencies\SSMS21\Microsoft.SqlServer.Smo.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.SqlServer.SmoExtended, Version=14.100.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dependencies\SSMS21\Microsoft.SqlServer.SmoExtended.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.SqlServer.SqlEnum, Version=17.100.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dependencies\SSMS21\Microsoft.SqlServer.SqlEnum.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Microsoft.VisualStudio.Utilities">
+      <HintPath>..\Dependencies\SSMS22\Microsoft.VisualStudio.Utilities.dll</HintPath>
     </Reference>
     <Reference Include="NLog">
-      <HintPath>..\Dependencies\SSMS21\NLog.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualBasic.Compatibility">
-      <Private>False</Private>
+      <HintPath>..\Dependencies\SSMS22\NLog.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore">
       <Private>False</Private>
@@ -346,38 +334,25 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="SqlPackageBase">
-      <HintPath>..\Dependencies\SSMS21\SqlPackageBase.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\Dependencies\SSMS22\SqlPackageBase.dll</HintPath>
     </Reference>
     <Reference Include="SqlWorkbench.Interfaces">
-      <HintPath>..\Dependencies\SSMS21\SqlWorkbench.Interfaces.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\Dependencies\SSMS22\SqlWorkbench.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Data">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.Design">
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Drawing">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Drawing.Design" />
-    <Reference Include="System.IdentityModel" />
     <Reference Include="System.IO.Compression" />
-    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Net" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.ServiceProcess" />
-    <Reference Include="System.Transactions" />
     <Reference Include="System.Windows">
       <Private>False</Private>
     </Reference>
@@ -390,7 +365,6 @@
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase">
       <Private>False</Private>
     </Reference>
@@ -398,7 +372,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Xceed.Wpf.Toolkit">
-      <HintPath>..\Dependencies\SSMS21\Xceed.Wpf.Toolkit.dll</HintPath>
+      <HintPath>..\Dependencies\SSMS22\Xceed.Wpf.Toolkit.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
