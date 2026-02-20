@@ -1,12 +1,14 @@
 <#
 .SYNOPSIS
-    Clean, update dependencies, build, and package HuntingDog.
+    Full pipeline: clean, update deps, build, package, commit, push, release.
 
 .DESCRIPTION
     1. Cleans the solution
     2. Copies DLL dependencies from the local SSMS installation
-    3. Builds HuntingDog.sln in Release mode
+    3. Builds HuntingDog.sln
     4. Packages HuntingDog.vsix + install.bat into a zip
+    5. Commits changed files and pushes to origin (with confirmation)
+    6. Creates a GitHub release (with confirmation)
 
 .PARAMETER SSMSVersion
     SSMS major version. Default: 22
@@ -27,6 +29,7 @@ $scriptDir    = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $SSMSBasePath = "C:\Program Files\Microsoft SQL Server Management Studio $SSMSVersion\Release\Common7\IDE"
 $depsDir      = Join-Path $scriptDir "Dependencies\SSMS$SSMSVersion"
 $sln          = Join-Path $scriptDir "HuntingDog.sln"
+$repo         = "selfpay-com/sql-hunting-dog"
 
 # =============================================================================
 # STEP 1 - Validate prerequisites
@@ -46,10 +49,13 @@ if (-not (Test-Path $ssmsExe)) {
     exit 1
 }
 $SSMSFullVersion = (Get-Item $ssmsExe).VersionInfo.ProductVersion
-$zipName = "HuntingDog-SSMS-v$SSMSFullVersion.zip"
-$zip     = Join-Path $scriptDir $zipName
 Write-Host "SSMS version: $SSMSFullVersion" -ForegroundColor Green
 
+$tag          = "v$SSMSFullVersion"
+$releaseTitle = "SSMS $SSMSVersion - v$SSMSFullVersion"
+$zipName      = "HuntingDog-SSMS-v$SSMSFullVersion.zip"
+
+# Find MSBuild via vswhere
 $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
 $msbuild = $null
 if (Test-Path $vswhere) {
@@ -62,6 +68,13 @@ if (-not $msbuild -or -not (Test-Path $msbuild)) {
     exit 1
 }
 Write-Host "MSBuild: $msbuild" -ForegroundColor Green
+
+$ghPath = Get-Command gh -ErrorAction SilentlyContinue
+if (-not $ghPath) {
+    Write-Error "GitHub CLI (gh) not found. Install it from https://cli.github.com"
+    exit 1
+}
+Write-Host "gh CLI: $($ghPath.Source)" -ForegroundColor Green
 
 # =============================================================================
 # STEP 2 - Clean the solution
@@ -174,13 +187,14 @@ if (-not (Test-Path $vsix)) {
 Write-Host "Build succeeded." -ForegroundColor Green
 
 # =============================================================================
-# STEP 5 - Package zip
+# STEP 5 - Package zip to temp
 # =============================================================================
 Write-Host ""
 Write-Host "=== Package release zip ===" -ForegroundColor Cyan
 
 $staging = Join-Path $env:TEMP "HuntingDog_Package_$(Get-Random)"
 New-Item -ItemType Directory -Path $staging -Force | Out-Null
+$zip = Join-Path $env:TEMP $zipName
 
 try {
     Copy-Item -Path $vsix -Destination (Join-Path $staging "HuntingDog.vsix")
@@ -218,5 +232,88 @@ finally {
     Remove-Item -Path $staging -Recurse -Force -ErrorAction SilentlyContinue
 }
 
+# =============================================================================
+# STEP 6 - Commit and push
+# =============================================================================
 Write-Host ""
-Write-Host "All done." -ForegroundColor Green
+Write-Host "=== Commit and push ===" -ForegroundColor Cyan
+
+Set-Location $scriptDir
+$status = git status --porcelain
+if ($status) {
+    Write-Host "Changed files:" -ForegroundColor Yellow
+    Write-Host $status
+    Write-Host ""
+    git add -A
+    git commit -m "SSMS $SSMSVersion - v$SSMSFullVersion"
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Commit failed."
+        exit 1
+    }
+}
+else {
+    Write-Host "No changes to commit." -ForegroundColor Green
+}
+
+Write-Host ""
+$pushChoice = Read-Host "Push to origin? (y/n)"
+if ($pushChoice -ne "y") {
+    Write-Host "Push skipped." -ForegroundColor Yellow
+}
+else {
+    git push
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Push failed."
+        exit 1
+    }
+    Write-Host "Pushed." -ForegroundColor Green
+}
+
+# =============================================================================
+# STEP 7 - GitHub release
+# =============================================================================
+Write-Host ""
+Write-Host "=== Create GitHub release ===" -ForegroundColor Cyan
+Write-Host "Repo:    $repo" -ForegroundColor Cyan
+Write-Host "Tag:     $tag" -ForegroundColor Cyan
+Write-Host "Title:   $releaseTitle" -ForegroundColor Cyan
+Write-Host "Asset:   $zip" -ForegroundColor Cyan
+Write-Host ""
+
+$releaseChoice = Read-Host "Create release? (y/n)"
+if ($releaseChoice -ne "y") {
+    Write-Host "Release skipped." -ForegroundColor Yellow
+    Remove-Item -Path $zip -Force -ErrorAction SilentlyContinue
+    exit 0
+}
+
+# Delete existing release with same tag if present
+gh release view $tag --repo $repo 2>$null
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "Deleting existing release '$tag' ..." -ForegroundColor Yellow
+    gh release delete $tag --repo $repo --yes --cleanup-tag
+}
+
+$notes = @"
+## HuntingDog for SSMS $SSMSVersion (v$SSMSFullVersion)
+
+### Installation
+1. Download ``$zipName`` below
+2. Extract the zip
+3. Close SSMS $SSMSVersion if it is running
+4. Run ``install.bat``
+
+The installer will silently remove any previous version and install the new one.
+"@
+
+gh release create $tag $zip --repo $repo --title $releaseTitle --notes $notes
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "GitHub release creation failed."
+    exit 1
+}
+
+Write-Host ""
+Write-Host "Release '$releaseTitle' published." -ForegroundColor Green
+
+# -- Cleanup temp zip ----------------------------------------------------------
+Remove-Item -Path $zip -Force -ErrorAction SilentlyContinue
