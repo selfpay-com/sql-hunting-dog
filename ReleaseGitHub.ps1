@@ -43,7 +43,7 @@ if (-not (Test-Path $ssmsExe)) {
 $SSMSFullVersion = (Get-Item $ssmsExe).VersionInfo.ProductVersion
 
 $tag          = "v$SSMSFullVersion"
-$releaseTitle = "SSMS $year - v$SSMSFullVersion"
+$releaseTitle = "SSMS $SSMSVersion - v$SSMSFullVersion"
 $zipName      = "HuntingDog-SSMS-v$SSMSFullVersion.zip"
 
 # Verify VSIX exists
